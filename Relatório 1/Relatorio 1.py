@@ -53,7 +53,7 @@ def generate_graphs1(data, th):
         erros = np.sqrt(np.diag(cov))
 
         poly = np.poly1d([a, b, c])
-        
+
         ax.tick_params(right=True, top=True, direction='in')
         ax.errorbar(
             x,
@@ -87,7 +87,7 @@ def generate_graphs1(data, th):
         fig.set_size_inches(8, 6)
         fig.tight_layout()
         fig.savefig(f'Grafico H{5 - i//6}C{i%6 +1}.png')
-        plt.close(fig=fig)    
+        plt.close(fig=fig)
 
 def generate_graphs2(data, th):
     massas = {
@@ -159,11 +159,11 @@ def generate_graphs2(data, th):
             (a, b, c), cov = np.polyfit(x.tolist()[left:right+1], y.tolist()[left:right+1], 2, cov=True)
             erros = np.sqrt(np.diag(cov))
             xerr.append(erros[0])
-            
+
             deltamassa.append(configuracoes[f"C{i+1}"]["m1"] - configuracoes[f"C{i+1}"]["m2"])
             aceleracoes.append(abs(2*a))
 
-        
+
         (a, b), cov = np.polyfit(aceleracoes, deltamassa, 1, cov=True)
         erros = np.sqrt(np.diag(cov))
         poly = np.poly1d([a, b])
@@ -188,7 +188,7 @@ def generate_graphs2(data, th):
             poly(aceleracoes),
             alpha=0.5
         )
-        
+
 
     ax.legend(loc="lower right")
     ax.set_title("Aceleração para cada situação")
@@ -198,8 +198,8 @@ def generate_graphs2(data, th):
     fig.set_size_inches(8, 6)
     fig.tight_layout()
     fig.savefig(f'Grafico Aceleracao x Massa.png')
-    plt.close(fig=fig)    
-        
+    plt.close(fig=fig)
+
 def calcular(data, th, opcao):
     massas = {
         "A": 49.4/1000,
@@ -267,11 +267,11 @@ def calcular(data, th, opcao):
             (a1, b1, c1), cov = np.polyfit(x.tolist()[left:right+1], y.tolist()[left:right+1], 2, cov=True)
             erros = np.sqrt(np.diag(cov))
             xerr.append(erros[0])
-            
+
             deltamassa.append(configuracoes[f"C{i+1}"]["m1"] - configuracoes[f"C{i+1}"]["m2"])
             aceleracoes.append(abs(2*a1))
 
-        
+
         (a2, b2), cov = np.polyfit(aceleracoes, deltamassa, 1, cov=True)
         erros = np.sqrt(np.diag(cov))
         if opcao == "inercia":
@@ -313,7 +313,7 @@ def calcularAceleracoes(data, th):
 
         acels_sig.append(ua)
     return [acels, acels_sig]
-    
+
 def calcularVelocidadeAngular(data, th):
     def media(lista):
         soma = 0
@@ -333,14 +333,14 @@ def calcularVelocidadeAngular(data, th):
 
         dT = (x.tolist()[left:right+1][-1] - x.tolist()[left:right+1][0])/60 # em minutos
         dH = abs(y.tolist()[left:right+1][-1] - y.tolist()[left:right+1][0])
-        
+
         n = dH/31.4
         ws.append(2*3.14*n/dT)
-        
+
         uH = 1/1000
         uT = (1/24)/60
 
-        uw = pow(uH, 2)/pow(5*dT, 2) + pow(dH, 2)*pow(uT, 2)/(pow(5, 2) * pow(dT, 4)) 
+        uw = pow(uH, 2)/pow(5*dT, 2) + pow(dH, 2)*pow(uT, 2)/(pow(5, 2) * pow(dT, 4))
         wsig.append(uw)
 
     return [round(media(ws), 4), round(media(wsig), 4)]
@@ -369,7 +369,7 @@ def generate_graphs3(inercia, torque):
     uM = pow(10, -4)
     uR = 5*pow(10,-5)
     R = 10.005/200
-    
+
     I = M*pow(R,2)
     uI = pow(R, 4)*pow(uM, 2) + 4*pow(R,2)*pow(M,2)*pow(uR, 2)
     uI = pow(uI, 1/2)
@@ -385,7 +385,7 @@ def generate_graphs3(inercia, torque):
     ax2.errorbar(T, 6, fmt='o', capsize=3, ecolor='k', label="Valor teórico previsto")
 
     ax2.legend(loc="lower right")
-    
+
     plt.suptitle("Valores obtidos")
     fig.set_size_inches(12, 6)
     fig.tight_layout()
