@@ -89,6 +89,40 @@ def gerarGraficos3():
     plt.title("Comparação obtido x teórico")
 
     plt.show()
-# gerarGraficos1(pd.read_csv('data f229/gravidade'))
-# gerarGraficos2(pd.read_csv("data f229/gravidade")["a"].mean())
+
+def gerarGraficos4():
+    d = []
+    t = []
+
+    for D in range(1, 8):
+        df = pd.read_csv(f"data f229/Data {D}")
+        t.append(pegarPeriodo(df))
+        d.append(D/100)
+    
+    y = []
+    x = []
+    for i in range(len(d)):
+        y.append(d[i] * pow(t[i], 2))
+        x.append(pow(d[i], 2))
+    
+    plt.plot(x, y)
+
+    (a, b), cov = np.polyfit(x, y, 1, cov=True)
+    erros = np.sqrt(np.diag(cov))
+
+    poly = np.poly1d([a, b])
+    g = (4 * pow(math.pi, 2)) / a
+    k = pow((b * g / 4 * pow(math.pi, 2)), 1/2)
+    plt.plot(x, poly(x), color="r", label=f"polyfit\nA: {a} +- {erros[0]}\nB: {b} +- {erros[1]}\ng: {g}\nk: {k}")
+    
+    plt.ylim(0,0.05)
+    plt.xlabel("Distancia² (m²)")
+    plt.ylabel("Distancia * Periodo² (m*s²)")
+    plt.legend(loc="upper left")
+    plt.show()
+
+
+gerarGraficos1(pd.read_csv('data f229/gravidade'))
+gerarGraficos2(pd.read_csv("data f229/gravidade")["a"].mean())
 gerarGraficos3()
+gerarGraficos4()
